@@ -1,0 +1,79 @@
+{% extends "pages/base.html" %}
+{% load l10n %}
+
+{% block title %}{{ memory.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+    .memory-image {
+        max-height: 500px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+                <li class="breadcrumb-item active">{{ memory.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="card p-0 overflow-hidden mb-4 shadow-sm">
+            {% if memory.image %}
+                <img src="{{ memory.image.url }}" alt="{{ memory.title }}" class="memory-image">
+            {% endif %}
+
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h1 class="h2 mb-0">{{ memory.title }}</h1>
+                    <span class="text-muted small">{{ memory.created_at|date:"d E Y" }}</span>
+                </div>
+
+                {% if memory.comment %}
+                    <p class="lead text-secondary">{{ memory.comment }}</p>
+                {% endif %}
+
+                <hr>
+
+                {% if memory.latitude and memory.longitude %}
+                    <div id="map" style="height: 400px;" class="rounded border"></div>
+                    <div class="mt-2 text-muted small">
+                        <i class="bi bi-geo-alt"></i> {{ memory.latitude }}, {{ memory.longitude }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-light border text-center py-4">
+                        <i class="bi bi-map-fill text-muted" style="font-size: 2rem;"></i>
+                        <p class="mb-0 mt-2">Координаты не указаны.</p>
+                    </div>
+                {% endif %}
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Назад к списку</a>
+                    <a href="{% url 'edit_memory' memory.pk %}" class="btn btn-outline-success">Редактировать</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if memory.latitude and memory.longitude %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% localize off %}
+<script>
+    var map = L.map('map').setView([{{ memory.latitude }}, {{ memory.longitude }}], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([{{ memory.latitude }}, {{ memory.longitude }}]).addTo(map)
+        .bindPopup("<b>{{ memory.title }}</b>").openPopup();
+</script>
+{% endlocalize %}
+{% endif %}
+{% endblock %}

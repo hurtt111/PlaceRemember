@@ -1,0 +1,77 @@
+{% extends "pages/base.html" %}
+{% load form_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="max-width-700 mx-auto">
+    <h1 class="mb-4">{% if form.instance.pk %}Редактировать{% else %}Новое{% endif %} воспоминание</h1>
+
+    <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Название</label>
+            {{ form.title|add_class:"form-control" }}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Фотография</label>
+            {{ form.image|add_class:"form-control" }}
+            {% if form.instance.image %}
+                <div class="mt-2 small text-muted">Текущее фото: {{ form.instance.image.name }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            {{ form.comment|add_class:"form-control" }}
+        </div>
+
+        {{ form.latitude.as_hidden }}
+        {{ form.longitude.as_hidden }}
+
+        <label class="form-label">Место на карте (кликните, чтобы выбрать)</label>
+        <div id="map" class="mb-3" style="height: 350px;"></div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-success px-4">Сохранить</button>
+            <a href="{% url 'home' %}" class="btn btn-light">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const latInput = document.querySelector('[name="latitude"]');
+const lngInput = document.querySelector('[name="longitude"]');
+
+const startLat = latInput.value || 50.1109;
+const startLng = lngInput.value || 8.6821;
+
+latInput.value = Number(startLat).toFixed(6);
+lngInput.value = Number(startLng).toFixed(6);
+
+const map = L.map('map').setView([startLat, startLng], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    .addTo(map);
+
+let marker = L.marker([startLat, startLng]).addTo(map);
+
+map.on('click', function(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    marker.setLatLng([lat, lng]);
+
+    latInput.value = lat.toFixed(6);
+    lngInput.value = lng.toFixed(6);
+});
+</script>
+
+{% endblock %}

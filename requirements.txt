@@ -1,0 +1,11 @@
+Django==4.2.27
+django-allauth==0.60.0
+gunicorn==21.2.0
+Pillow==10.2.0
+psycopg2-binary==2.9.9
+requests==2.31.0
+whitenoise==6.5.0
+django-crispy-forms==1.14.0
+pytest-django==4.5.2
+flake8==5.0.4
+coverage==7.13.1

@@ -1,0 +1,30 @@
+{% load tz %}
+
+<footer class="bg-light text-center py-2 border-top fixed-bottom">
+  <div class="container d-flex justify-content-between align-items-center">
+    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#authorModal">
+      Автор
+    </button>
+
+    <span>&copy; {{ now|date:"Y" }} PlaceRemember</span>
+  </div>
+</footer>
+
+<div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authorModalLabel">Контакты автора</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <p>Email: hurt2@yandex.ru</p>
+        <p>Telegram: @egorpolyakovv</p>
+        <p>GitHub: <a href="https://github.com/hurtt111" target="_blank">github.com/hurtt111</a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

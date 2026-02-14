@@ -1,0 +1,24 @@
+{% extends "pages/base.html" %}
+
+{% block title %}{{ memory.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{% endblock %}
+
+{% block content %}
+<h1>{{ memory.title }}</h1>
+<p>{{ memory.comment }}</p>
+
+<div id="map" style="height: 400px;"></div>
+
+<a href="{% url 'home' %}" class="btn btn-secondary mt-3">Назад</a>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    L.map('map').setView([{{ memory.latitude }}, {{ memory.longitude }}], 13)
+     .addLayer(L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'));
+</script>
+{% endblock %}
